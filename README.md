@@ -1,3 +1,5 @@
+[![CI](https://github.com/Elbelo07/assignments/actions/workflows/ci.yml/badge.svg)](https://github.com/Elbelo07/assignments/actions/workflows/ci.yml)
+
 # Foundations Learning Path Assignments
 
 ## Introduction
