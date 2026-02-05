@@ -1,45 +1,72 @@
 [![CI](https://github.com/Elbelo07/assignments/actions/workflows/ci.yml/badge.svg)](https://github.com/Elbelo07/assignments/actions/workflows/ci.yml)
 
-# Foundations Learning Path Assignments
+# Foundations Learning Path – Assignments
 
-## Introduction
+This repository contains my work for the Foundations Learning Path.
 
-We are going to be using this project throughout the course.
+The Foundations Learning Path is designed as a progressive sequence of assignments whose goal is to apply software engineering best practices to data-oriented projects. Instead of treating each assignment as an isolated exercise, the learning path builds a cumulative codebase that is continuously extended, refactored, and improved over time.
 
-This assignment uses life expectancy in Europe grouped by Country (or other, like group of countries), Age, Sex, and Time. But the data format makes it hard to use. We will be building a pipeline do clean the data, while applying the concepts you've learned in the previous modules.
+The topics covered throughout the learning path include clean code, testing, linting, packaging, continuous integration, object-oriented programming, and design patterns.
 
-## Installing
+---
 
-Before installing, make sure your `pip` is up to date.
+## Project Structure
 
-```bash
-pip --version
-```
+assignments/
+├── assignment_0/
+├── assignment_1/
+├── assignment_2/
+├── assignment_3/
+├── assignment_4/
+├── assignment_5/
+├── life_expectancy/
+│ ├── data/
+│ ├── tests/
+│ ├── cleaning.py
+│ └── init.py
+├── pyproject.toml
+├── README.md
 
-Prior to the introduction of `pyproject.toml`-based builds (in PEP 517 and PEP 518), pip had only supported installing packages using setup.py files that were built using `setuptools`. But in version 21.3, pip added support for performing editable installs of packages that use `pyproject.toml`. This means that you can use pip to install packages described in the `pyproject.toml`.
+Each `assignment_*` directory contains the instructions and context for a specific assignment.  
+The `life_expectancy` package is the shared project that is reused and evolved across multiple assignments.
 
-To update pip, run:
+---
 
-```bash
-pip install --upgrade pip
-```
+## Current Progress
 
-Now you're ready to go!
+### Assignment 0 – Project Setup (Completed)
 
-1. Clone this repo.
-2. Copy `assignments` folder into a separate project `mv -r nos-lp-foundations/assignments assignments`.
-3. Move into the assignments folder (`cd assignments`) and start a new repo (`git init`).
-4. Create a virtual environment with `python -m venv .venv`.
-   > **Note for Anaconda users**: We would prefer if you exit the automatic conda environments and tried using the steps above, as they are the canonical Python way of creating virtual environments. However, we realize working that way might be tricky for Anaconda users since Anaconda usually changes the configurations of your machine. If you are having too many problems getting started, then feel free to use the "conda way" of handling environments.  I.e.: create a virtual environment with `conda create --name foundations`.
-5. Activate the virtual environment with `source .venv/bin/activate` or `.venv\Scripts\activate` on Windows.
-   > **Note for Anaconda users**: Same as above, if you are having too many problems getting started, then feel free to activate the environment with `conda activate foundations` instead.
+The initial assignment focused on setting up the project correctly from the start. This included packaging the project using `pyproject.toml`, configuring a virtual environment, installing the project in editable mode with pip, and validating the setup using automated tests.
 
-Don't install the project yet. We will do that in [setup assignment](./assignment_0/README.md).
+---
 
-## Using this project
+### Assignment 1 – EU Life Expectancy: Data Cleaning & Code Quality (Completed)
 
-Open the `README.md` file inside each assignment and follow the instructions.
+In this assignment, a full data cleaning pipeline was implemented using Eurostat life expectancy data. The work included reshaping the dataset from wide to long format, separating and cleaning the different dimensions, validating year and value fields, filtering data by country through a command-line interface, and exporting the cleaned dataset to CSV.
 
-> Note: Remember that all commands inside the Readme files assume you are in the root of the project.
+In addition to the data processing logic, this assignment introduced code quality practices such as unit testing with pytest, test coverage enforcement, linting with pylint, and continuous integration using GitHub Actions.
 
-You can now start working on the [setup assignment](./assignment_0/README.md). Good luck! 🚀
+---
+
+### Upcoming Assignments
+
+The following assignments are not yet completed and will further extend and refactor the existing codebase:
+
+- Assignment 2 – Linting and Formatting
+- Assignment 3 – Continuous Integration
+- Assignment 4 – Object-Oriented Programming
+- Assignment 5 – Design Patterns
+
+Each new assignment builds on top of the previous ones, progressively improving the structure, quality, and robustness of the project.
+
+---
+
+## Author
+
+Lourenço Shirley Belo
+
+---
+
+## Notes
+
+This repository is a learning project. While the assignments are educational in nature, the codebase is intentionally structured to reflect real-world practices for writing clean, maintainable, and production-oriented Python code.
