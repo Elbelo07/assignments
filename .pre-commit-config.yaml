@@ -1,0 +1,27 @@
+ci:
+  skip: [pylint]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: debug-statements
+
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint life_expectancy
+        language: system
+        types: [python]
+        require_serial: true
+        args: ["-rn", "-sn"]
+
+      - id: pytest
+        name: pytest
+        entry: pytest life_expectancy
+        language: system
+        pass_filenames: false
