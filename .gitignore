@@ -158,6 +158,9 @@ cython_debug/
 # notebooks for training
 notebooks/
 
+# CSV Files
+life_expectancy/data/*_life_expectancy.csv
+
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
