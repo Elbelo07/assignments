@@ -32,7 +32,7 @@ For this assignment, you need to package the project and install it in editable 
     pytest life_expectancy/tests/test_pyproject.py
     ```
 
-    Depending on whether you already have `pytest` installed, the command might not even work. If that's the case, don't worry. It will be installed in the next steps.  
+    Depending on whether you already have `pytest` installed, the command might not even work. If that's the case, don't worry. It will be installed in the next steps.
 
 2. Complete the `pyproject.toml` file:
    1. The project name should be `life_expectancy`.

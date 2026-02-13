@@ -22,7 +22,7 @@ In order to make your life easier during this assignment, we want to give you a 
 3. Modify your `main` function so that the cleaned DataFrame is always returned. That will allow you to compare it with the expected fixture.
 4. Modify the current test in `test_cleaning.py` to consume these two fixtures instead of the actual data.
 
-   > Don't forget to pass the new fixture an argument of the test functions!  
+   > Don't forget to pass the new fixture an argument of the test functions!
 
 5. Final touch: if you read the docstring of the `run_before_and_after_tests` function in the `life_expectancy\tests\conftest.py` file, you will see that by now, the function will be doing nothing... and, if it does nothing, it's dead code and dead code must be removed :smiling_imp:!
 
@@ -48,7 +48,7 @@ In order to make your life easier during this assignment, we want to give you a 
    │   │   ├── test_cleaning.py  # Tests for the cleaning module (assignment 1)
    │   │   └── test_pyproject.py  # Tests for the pyproject installation (this assignment)
    |   ├── module_1.py  # Your modules
-   |   ├── module_2.py  
+   |   ├── module_2.py
    |   ├── ...
    |   └── module_n.py
    |

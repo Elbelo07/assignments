@@ -11,7 +11,7 @@ Let's break it down:
 assignments
 ├── life_expectancy    # This directory contains the package you'll be creating on the assignment
 | ├── data             # Data files are to be kept in this directory
-| └── tests            # Directory for tests. `pytest`, our testing framework, will try to find this folder and run all 
+| └── tests            # Directory for tests. `pytest`, our testing framework, will try to find this folder and run all
 |                      #   tests inside it.
 └── pyproject.toml     # Meta-information about the project
 ```
