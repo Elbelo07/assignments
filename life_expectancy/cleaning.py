@@ -4,21 +4,31 @@ import pandas as pd
 
 RAW_DATA_DIR = Path(__file__).parent / "data" / "raw_data"
 PROCESSED_DATA_DIR = Path(__file__).parent / "data" / "processed_data"
-DATA_TSV_PATH =  RAW_DATA_DIR / "eu_life_expectancy_raw.tsv"
 
-
-def load_data() -> pd.DataFrame:
+def load_data(file_path: Path) -> pd.DataFrame:
     """
-    Load the raw TSV file and return the raw DataFrame.
+    Does:
+        Load the raw TSV file and return the raw DataFrame.
+
+    Args:
+        file_path (Path): Path to the raw TSV file.
+
+    Output:
+        pd.DataFrame: Raw dataset as a pandas DataFrame.
     """
-
-    df = pd.read_csv(DATA_TSV_PATH, sep="\t")
-    return df
-
+    return pd.read_csv(file_path, sep="\t")
 
 def clean_data(data: pd.DataFrame, country: str) -> pd.DataFrame:
     """
-    Clean the raw life expectancy dataset and return a cleaned DataFrame.
+    Does:
+        Clean the raw life expectancy dataset and return a cleaned DataFrame.
+
+    Args:
+        data (pd.DataFrame): Raw dataset.
+        country (str): Country code to filter.
+
+    Output:
+        pd.DataFrame: Cleaned and filtered dataset.
     """
 
     df = data.copy()
@@ -71,8 +81,17 @@ def clean_data(data: pd.DataFrame, country: str) -> pd.DataFrame:
 
 def save_data(data: pd.DataFrame, country: str) -> None:
     """
-    Save the cleaned dataframe to CSV under life_Expectancy/data/data_cleaned/.
+    Does:
+        Save the cleaned DataFrame to the processed_data folder.
+
+    Args:
+        data (pd.DataFrame): Cleaned dataset.
+        country (str): Country code used for naming the output file.
+
+    Output:
+        None
     """
+
     df = data.copy()
 
     # Save cleaned dataset without index
@@ -83,9 +102,18 @@ def save_data(data: pd.DataFrame, country: str) -> None:
 
 def main(country: str = 'PT') -> None:
     """
-    Run the full pipeline: load -> clean -> save
+    Does:
+        Run the full pipeline: load -> clean -> save.
+
+    Args:
+        country (str): Country code to process.
+
+    Output:
+        None
     """
-    df_raw = load_data()
+    raw_path = RAW_DATA_DIR / "eu_life_expectancy_raw.tsv"
+
+    df_raw = load_data(raw_path)
     df_clean = clean_data(df_raw, country)
     save_data(df_clean, country)
 
@@ -93,7 +121,14 @@ def main(country: str = 'PT') -> None:
 def _parse_args() -> argparse.Namespace:
     """
     Parse command-line arguments for the cleaning pipeline.
+
+    Args:
+        None
+
+    Output:
+        argparse.Namespace: Parsed CLI arguments (e.g., country).
     """
+
     parser = argparse.ArgumentParser(description="Clean life expectancy data for a given country.")
     parser.add_argument(
         "--country",
