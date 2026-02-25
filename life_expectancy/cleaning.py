@@ -2,24 +2,42 @@ from pathlib import Path
 import argparse
 import pandas as pd
 
+RAW_DATA_DIR = Path(__file__).parent / "data" / "raw_data"
+PROCESSED_DATA_DIR = Path(__file__).parent / "data" / "processed_data"
 
-
-def clean_data(country: str = "PT") -> None:
+def load_data(file_path: Path) -> pd.DataFrame:
     """
-    Clean EU life expectancy data and generate a country-specific dataset.
+    Does:
+        Load the raw TSV file and return the raw DataFrame.
 
-    The function loads the raw Eurostat TSV file, reshapes it to long format,
-    cleans year and value fields, filters data for the specified country, and saves the result
-    as a CSV file.
+    Args:
+        file_path (Path): Path to the raw TSV file.
+
+    Output:
+        pd.DataFrame: Raw dataset as a pandas DataFrame.
+    """
+    return pd.read_csv(file_path, sep="\t")
+
+def clean_data(data: pd.DataFrame, country: str) -> pd.DataFrame:
+    """
+    Does:
+        Clean the raw life expectancy dataset and return a cleaned DataFrame.
+
+    Args:
+        data (pd.DataFrame): Raw dataset.
+        country (str): Country code to filter.
+
+    Output:
+        pd.DataFrame: Cleaned and filtered dataset.
     """
 
-    # Load raw Eurostat life expectancy data (wide format)
-    data_path = Path(__file__).parent / "data" / "eu_life_expectancy_raw.tsv"
-    df = pd.read_csv(data_path, sep="\t")
+    df = data.copy()
 
     # Split the first column (unit, sex, age, region) into separate columns
     first_col = df.columns[0]
-    parts = df[first_col].str.split(",", expand=True)
+
+    parts = df[first_col].astype(str).str.split(",", expand=True)
+    parts = parts.iloc[:, :4]  # garante no máximo 4
     parts.columns = ["unit", "sex", "age", "region"]
     parts = parts.apply(lambda s: s.astype(str).str.strip())
 
@@ -46,28 +64,75 @@ def clean_data(country: str = "PT") -> None:
         df_long["value"]
         .astype(str)
         .str.strip()
-        .replace({":": None})
+        .replace({":": pd.NA})
+        .str.replace(",", ".", regex=False)
         .str.extract(r"([-]?\d+(?:\.\d+)?)", expand=False)
     )
 
     df_long["value"] = pd.to_numeric(df_long["value"], errors="coerce")
     df_long = df_long.dropna(subset=["value"])
-    df_long["value"] = df_long["value"].astype(float)
 
     # Filter data for the specified country only
-    country = country.strip().upper()
-    df_pt = df_long[df_long["region"] == country].copy()
-    df_pt = df_pt[["unit", "sex", "age", "region", "year", "value"]]
+    country_code = country.strip().upper()
+    df_country = df_long[df_long["region"] == country_code].copy()
+    df_country = df_country[["unit", "sex", "age", "region", "year", "value"]]
+
+    return df_country
+
+def save_data(data: pd.DataFrame, country: str) -> None:
+    """
+    Does:
+        Save the cleaned DataFrame to the processed_data folder.
+
+    Args:
+        data (pd.DataFrame): Cleaned dataset.
+        country (str): Country code used for naming the output file.
+
+    Output:
+        None
+    """
+
+    df = data.copy()
 
     # Save cleaned dataset without index
-    out_path = Path(__file__).parent / "data" / f"{country.lower()}_life_expectancy.csv"
-    df_pt.to_csv(out_path, index=False)
+    PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    out_path = PROCESSED_DATA_DIR / f"{country.lower()}_life_expectancy.csv"
+    df.to_csv(out_path, index=False)
+
+
+def main(country: str = 'PT') -> None:
+    """
+    Does:
+        Run the full pipeline: load -> clean -> save.
+
+    Args:
+        country (str): Country code to process.
+
+    Output:
+        None
+    """
+    raw_path = RAW_DATA_DIR / "eu_life_expectancy_raw.tsv"
+
+    df_raw = load_data(raw_path)
+    df_clean = clean_data(df_raw, country)
+    save_data(df_clean, country)
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Clean EU life expectancy dataset.")
+    """
+    Parse command-line arguments for the cleaning pipeline.
+
+    Args:
+        None
+
+    Output:
+        argparse.Namespace: Parsed CLI arguments (e.g., country).
+    """
+
+    parser = argparse.ArgumentParser(description="Clean life expectancy data for a given country.")
     parser.add_argument(
         "--country",
+        type = str,
         default="PT",
         help="Country code to filter by (default: PT).",
     )
@@ -76,4 +141,4 @@ def _parse_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = _parse_args()
-    clean_data(country=args.country)
+    main(args.country)
