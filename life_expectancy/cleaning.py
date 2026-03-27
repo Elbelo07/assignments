@@ -3,17 +3,18 @@ import argparse
 import pandas as pd
 
 from life_expectancy.load_and_save import load_data, save_data
+from life_expectancy.region import Region
 
 RAW_DATA_DIR = Path(__file__).parent / "data" / "raw_data"
 
-def clean_data(data: pd.DataFrame, country: str) -> pd.DataFrame:
+def clean_data(data: pd.DataFrame, country: Region) -> pd.DataFrame:
     """
     Does:
         Clean the raw life expectancy dataset and return a cleaned DataFrame.
 
     Args:
         data (pd.DataFrame): Raw dataset.
-        country (str): Country code to filter.
+        country (Region): Country code to filter.
 
     Output:
         pd.DataFrame: Cleaned and filtered dataset.
@@ -61,20 +62,19 @@ def clean_data(data: pd.DataFrame, country: str) -> pd.DataFrame:
     df_long = df_long.dropna(subset=["value"])
 
     # Filter data for the specified country only
-    country_code = country.strip().upper()
-    df_country = df_long[df_long["region"] == country_code].copy()
+    df_country = df_long[df_long["region"] == country.value].copy()
     df_country = df_country[["unit", "sex", "age", "region", "year", "value"]]
 
     return df_country
 
 
-def main(country: str = 'PT') -> pd.DataFrame:
+def main(country: Region = Region.PT) -> pd.DataFrame:
     """
     Does:
         Run the full pipeline: load -> clean -> save.
 
     Args:
-        country (str): Country code to process.
+        country (Region): Country code to process.
 
     Output:
         pd.DataFrame: Cleaned DataFrame
@@ -102,12 +102,12 @@ def _parse_args() -> argparse.Namespace:  # pragma: no cover
     parser.add_argument(
         "--country",
         type = str,
-        default="PT",
-        help="Country code to filter by (default: PT).",
+        default = Region.PT.value,
+        help = "Country code to filter by (default: PT).",
     )
     return parser.parse_args()
 
 
 if __name__ == "__main__":  # pragma: no cover
     args = _parse_args()
-    main(args.country)
+    main(Region(args.country))
