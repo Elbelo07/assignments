@@ -1,6 +1,8 @@
 from pathlib import Path
 import pandas as pd
 
+from life_expectancy.region import Region
+
 
 RAW_DATA_DIR = Path(__file__).parent / "data" / "raw_data"
 PROCESSED_DATA_DIR = Path(__file__).parent / "data" / "processed_data"
@@ -18,7 +20,7 @@ def load_data(file_path: Path) -> pd.DataFrame:
     """
     return pd.read_csv(file_path, sep="\t")
 
-def save_data(data: pd.DataFrame, country: str) -> None:
+def save_data(data: pd.DataFrame, country: Region) -> None:
     """
     Does:
         Save the cleaned DataFrame to the processed_data folder.
@@ -35,5 +37,5 @@ def save_data(data: pd.DataFrame, country: str) -> None:
 
     # Save cleaned dataset without index
     PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = PROCESSED_DATA_DIR / f"{country.lower()}_life_expectancy.csv"
+    out_path = PROCESSED_DATA_DIR / f"{country.value.lower()}_life_expectancy.csv"
     df.to_csv(out_path, index=False)
