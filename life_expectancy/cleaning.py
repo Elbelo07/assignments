@@ -2,21 +2,9 @@ from pathlib import Path
 import argparse
 import pandas as pd
 
+from life_expectancy.load_and_save import load_data, save_data
+
 RAW_DATA_DIR = Path(__file__).parent / "data" / "raw_data"
-PROCESSED_DATA_DIR = Path(__file__).parent / "data" / "processed_data"
-
-def load_data(file_path: Path) -> pd.DataFrame:
-    """
-    Does:
-        Load the raw TSV file and return the raw DataFrame.
-
-    Args:
-        file_path (Path): Path to the raw TSV file.
-
-    Output:
-        pd.DataFrame: Raw dataset as a pandas DataFrame.
-    """
-    return pd.read_csv(file_path, sep="\t")
 
 def clean_data(data: pd.DataFrame, country: str) -> pd.DataFrame:
     """
@@ -79,28 +67,8 @@ def clean_data(data: pd.DataFrame, country: str) -> pd.DataFrame:
 
     return df_country
 
-def save_data(data: pd.DataFrame, country: str) -> None:
-    """
-    Does:
-        Save the cleaned DataFrame to the processed_data folder.
 
-    Args:
-        data (pd.DataFrame): Cleaned dataset.
-        country (str): Country code used for naming the output file.
-
-    Output:
-        None
-    """
-
-    df = data.copy()
-
-    # Save cleaned dataset without index
-    PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = PROCESSED_DATA_DIR / f"{country.lower()}_life_expectancy.csv"
-    df.to_csv(out_path, index=False)
-
-
-def main(country: str = 'PT') -> None:
+def main(country: str = 'PT') -> pd.DataFrame:
     """
     Does:
         Run the full pipeline: load -> clean -> save.
@@ -109,16 +77,17 @@ def main(country: str = 'PT') -> None:
         country (str): Country code to process.
 
     Output:
-        None
+        pd.DataFrame: Cleaned DataFrame
     """
     raw_path = RAW_DATA_DIR / "eu_life_expectancy_raw.tsv"
 
     df_raw = load_data(raw_path)
     df_clean = clean_data(df_raw, country)
     save_data(df_clean, country)
+    return df_clean
 
 
-def _parse_args() -> argparse.Namespace:
+def _parse_args() -> argparse.Namespace:  # pragma: no cover
     """
     Parse command-line arguments for the cleaning pipeline.
 
@@ -139,6 +108,6 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     args = _parse_args()
     main(args.country)
